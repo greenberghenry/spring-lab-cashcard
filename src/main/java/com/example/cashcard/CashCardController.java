@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/cashcards")
 public class CashCardController {
-    private CashCardRepository cashCardRepository;
+    private final CashCardRepository cashCardRepository;
 
     public CashCardController(CashCardRepository cashCardRepository) {
         this.cashCardRepository = cashCardRepository;
@@ -24,7 +24,7 @@ public class CashCardController {
     @GetMapping("/{requestId}")
     public ResponseEntity<CashCard> findById(@PathVariable Long requestId, Principal principal) {
         CashCard cashCard = findCashCard(requestId, principal.getName());
-        if(cashCard != null) {
+        if (cashCard != null) {
             return ResponseEntity.ok(cashCard);
         }
         return ResponseEntity.notFound().build();
@@ -55,7 +55,7 @@ public class CashCardController {
     @PutMapping("/{requestId}")
     public ResponseEntity<Void> updateCashCard(@PathVariable Long requestId, @RequestBody CashCard cashCardToUpdate, Principal principal) {
         CashCard cashCard = findCashCard(requestId, principal.getName());
-        if(cashCard != null){
+        if (cashCard != null) {
             CashCard updatedCashCard = new CashCard(cashCard.id(), cashCardToUpdate.amount(), principal.getName());
             cashCardRepository.save(updatedCashCard);
             return ResponseEntity.noContent().build();
@@ -65,7 +65,7 @@ public class CashCardController {
 
     @DeleteMapping("/{requestId}")
     public ResponseEntity<Void> deleteCashCard(@PathVariable Long requestId, Principal principal) {
-        if(cashCardRepository.existsByIdAndOwner(requestId, principal.getName())){
+        if (cashCardRepository.existsByIdAndOwner(requestId, principal.getName())) {
             cashCardRepository.deleteById(requestId);
             return ResponseEntity.noContent().build();
         }
